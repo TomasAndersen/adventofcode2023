@@ -4,22 +4,102 @@
 package adventofcode2023
 
 class Day1 {
+
+    enum class Numbers(val value: Int) {
+        zero(0),
+        one(1),
+        two(2),
+        three(3),
+        four(4),
+        five(5),
+        six(6),
+        seven(7),
+        eight(8),
+        nine(9)
+    }
+
     fun getLines(): List<String> {
-        return this.javaClass.classLoader.getResource("day1input.txt").readText().split("\n");
+        return this.javaClass.classLoader.getResource("day1input.txt").readText().split("\n")
+    }
+
+    fun sumFromNumbers(): Int {
+        var sum = 0
+        try {
+            this.getLines().forEach { line ->
+                if (line.length > 0) {
+                    val firstNumber = getFirstDigitAsString(line)
+                    val lastNumber = getLastDigitAsString(line)
+                    val combinedNumber = (firstNumber + lastNumber).toInt()
+                    sum += combinedNumber
+                }
+            }
+        } catch (e: Exception) {
+            println(e)
+        }
+        return sum
+    }
+
+    fun sumFromNumbersAndWords(): Int {
+        var sum = 0
+        try {
+            this.getLines().forEach { line ->
+                if (line.length > 0) {
+                    val firstNumber = calculateFirstNumber(line).toString()
+                    val lastNumber = calculateLastNumber(line).toString()
+                    val combinedNumber = (firstNumber + lastNumber).toInt()
+                    sum += combinedNumber
+                }
+            }
+        } catch (e: Exception) {
+            println(e)
+        }
+        return sum
+    }
+
+    fun getFirstDigitAsString(line: String): String {
+        return line.first { c -> c.isDigit() }.toString()
+    }
+
+    fun getLastDigitAsString(line: String): String {
+        return line.last { c -> c.isDigit() }.toString()
+    }
+
+    fun indexOfFirstDigit(line: String): Int {
+        return line.indexOfFirst { c -> c.isDigit() }
+    }
+
+    fun indexOfLastDigit(line: String): Int {
+        return line.indexOfLast { c -> c.isDigit() }
+    }
+
+    fun calculateFirstNumber(line: String): Int {
+        var lowestIndex = indexOfFirstDigit(line)
+        var lowestNum = line[lowestIndex].toString().toInt()
+        for (num in Numbers.values()) {
+            val index = line.indexOf(num.name)
+            if (index != -1 && index < lowestIndex) {
+                lowestIndex = index;
+                lowestNum = num.value;
+            }
+        }
+        return lowestNum
+    }
+
+    fun calculateLastNumber(line: String): Int {
+        var highestIndex = indexOfLastDigit(line)
+        var highestNum = line[highestIndex].toString().toInt()
+        for (num in Numbers.values()) {
+            val index = line.lastIndexOf(num.name)
+            if (index != -1 && index > highestIndex) {
+                highestIndex = index;
+                highestNum = num.value;
+            }
+        }
+        return highestNum
     }
 }
 
 fun main() {
-    var sum = 0
-    try {
-        Day1().getLines().forEach { line ->
-            val firstNumber = line.first { c -> c.isDigit() }.toString()
-            val lastNumber = line.last { c -> c.isDigit() }.toString()
-            val combinedNumber = (firstNumber + lastNumber).toInt()
-            sum += combinedNumber;
-        }
-    } catch (e: Exception) {
-        println(e)
-    }
-    println(sum)
+    println("Sum by numbers only: " + Day1().sumFromNumbers())
+    println("Sum by numbers and words: " + Day1().sumFromNumbersAndWords())
 }
