@@ -13,9 +13,9 @@ fun main() {
     var sum = 0
     try {
         Day1().getLines().forEach { line ->
-            val firstNumber = line.first { c -> c.isDigit() }.toString().toInt()
-            val lastNumber = line.last { c -> c.isDigit() }.toString().toInt()
-            val combinedNumber = firstNumber * 10 + lastNumber
+            val firstNumber = line.first { c -> c.isDigit() }.toString()
+            val lastNumber = line.last { c -> c.isDigit() }.toString()
+            val combinedNumber = (firstNumber + lastNumber).toInt()
             sum += combinedNumber;
         }
     } catch (e: Exception) {
